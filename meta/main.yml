@@ -1,8 +1,7 @@
 # vim: ts=2 sw=2 et ft=ansible.yaml
 galaxy_info:
   author: Max Kovgan
-  description: manage godaddy hosted dns records
-  company: OpsGuru
+  description: manage godaddy hosted dns records. Forked from OpsGuru.
   license: MIT
   min_ansible_version: 2.2
   # min_ansible_container_version:
