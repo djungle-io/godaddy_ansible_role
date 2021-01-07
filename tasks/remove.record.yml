@@ -3,22 +3,22 @@
 # tasks file for nrg.godaddy
 - name: setup api_server_url
   set_fact:
-    api_server_url: '{{api_server}}/v{{api_version}}/domains/{{domain_name}}/records'
-    authorization:  'sso-key {{api_key}}:{{api_secret}}'
+    api_server_url: '{{ api_server }}/v{{ api_version }}/domains/{{ domain_name }}/records'
+    authorization:  'sso-key {{ api_key }}:{{ api_secret }}'
     need_delete:    False
 
 - name: call godaddy api to update/create new record
   uri:
-    url:          '{{api_server_url}}'
+    url:          '{{ api_server_url }}'
     method:       GET
     body_format:  json
     headers:
-      Authorization: '{{authorization}}'
+      Authorization: '{{ authorization }}'
   register: current_records_result
 
 - name: setup current_records
   set_fact:
-    current_records: '{{current_records_result.json}}'
+    current_records: '{{ current_records_result.json }}'
 
 - name: print current_records
   debug:
@@ -31,8 +31,8 @@
 
 - name: update new_records with records we want to leave
   set_fact:
-    new_records: '{{new_records + [record]}}'
-  with_items: '{{current_records}}'
+    new_records: '{{ new_records + [record] }}'
+  with_items: '{{ current_records }}'
   loop_control:
     loop_var: record
   when:
@@ -50,12 +50,12 @@
 
 - name: call godaddy api to delete a record
   uri:
-    url:          '{{api_server_url}}'
+    url:          '{{ api_server_url }}'
     method:       PUT
-    body:         '{{new_records|to_json}}'
+    body:         '{{ new_records|to_json }}'
     body_format:  json
     headers:
-      Authorization: '{{authorization}}'
+      Authorization: '{{ authorization }}'
       Accept: 'application/json'
   when:
   - (current_records|length) != (new_records|length)
