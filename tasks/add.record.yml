@@ -3,55 +3,55 @@
 # tasks file for opsguru.godaddy
 - name: setup api_server_url
   set_fact:
-    api_server_url: '{{api_server}}/v{{api_version}}/domains/{{domain_name}}/records'
-    authorization:  'sso-key {{api_key}}:{{api_secret}}'
+    api_server_url: '{{ api_server }}/v{{ api_version }}/domains/{{ domain_name }}/records'
+    authorization:  'sso-key {{ api_key }}:{{ api_secret }}'
 
 - name: setup godaddy dns record
   set_fact:
     godaddy_dns_record:
-      name:           '{{record_name}}'
-      data:           '{{record_data}}'
-      type:           '{{type}}'
-      ttl:            '{{ttl}}'
+      name:           '{{ record_name }}'
+      data:           '{{ record_data }}'
+      type:           '{{ type }}'
+      ttl:            '{{ ttl }}'
 
 - name: update godaddy_dns_record with priority
   set_fact:
-    godaddy_dns_record: '{{godaddy_dns_record|combine({"priority": priority})}}'
+    godaddy_dns_record: '{{ godaddy_dns_record|combine({"priority": priority}) }}'
   when:
   - priority|default("", true)|length
 
 - name: update godaddy_dns_record with service
   set_fact:
-    godaddy_dns_record: '{{godaddy_dns_record|combine({"service": service})}}'
+    godaddy_dns_record: '{{ godaddy_dns_record|combine({"service": service}) }}'
   when:
   - service|default("", true)|length
 
 - name: update godaddy_dns_record with protocol
   set_fact:
-    godaddy_dns_record: '{{godaddy_dns_record|combine({"protocol": protocol})}}'
+    godaddy_dns_record: '{{ godaddy_dns_record|combine({"protocol": protocol}) }}'
   when:
   - protocol|default("", true)|length
 
 - name: update godaddy_dns_record with port
   set_fact:
-    godaddy_dns_record: '{{godaddy_dns_record|combine({"port": port})}}'
+    godaddy_dns_record: '{{ godaddy_dns_record|combine({"port": port}) }}'
   when:
   - port|default("", true)|length
 
 - name: update godaddy_dns_record with weight
   set_fact:
-    godaddy_dns_record: '{{godaddy_dns_record|combine({"weight": weight})}}'
+    godaddy_dns_record: '{{ godaddy_dns_record|combine({"weight": weight}) }}'
   when:
   - weight|default("", true)|length
 
 
 - name: setup records_data_dict
   set_fact:
-    body_dict: [ '{{godaddy_dns_record}}' ]
+    body_dict: [ '{{ godaddy_dns_record }}' ]
 
 - name: setup setup record_data (json)
   set_fact:
-    body: '{{body_dict|to_nice_json}}'
+    body: '{{ body_dict|to_nice_json }}'
 
 - name: print current api_server_url
   debug:
@@ -65,10 +65,10 @@
 
 - name: call godaddy api to update/create new record
   uri:
-    url:          '{{api_server_url}}'
+    url:          '{{ api_server_url }}'
     method:       PATCH
-    body:         '{{body}}'
+    body:         '{{ body }}'
     body_format:  json
     headers:
-      Authorization: '{{authorization}}'
+      Authorization: '{{ authorization }}'
       Accept: 'application/json'
