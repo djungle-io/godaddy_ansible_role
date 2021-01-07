@@ -1,0 +1,21 @@
+name: lint check
+
+on:
+  push:
+    branches: [djungle-galaxy]
+  pull_request:
+    branches: [djungle-galaxy]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-20.04
+
+    steps:
+    - name: install ansible
+      run: sudo apt install ansible ansible-lint
+
+    - uses: actions/checkout@v2
+
+    - name: run ansible-lint
+      run: ansible-lint . 
