@@ -72,3 +72,5 @@
     headers:
       Authorization: '{{ authorization }}'
       Accept: 'application/json'
+  register: patch_record
+  failed_when: patch_record.status != 200 and (patch_record.status == 422 and patch_record.json.code != "DUPLICATE_RECORD")
